@@ -9,22 +9,25 @@ const categoryRoutes = require("./routes/categoryRoutes"); // ✅ Import categor
 const app = express();
 connectDB();
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://quickshop-frontendd.onrender.com/"
+];
+
 const corsOptions = {
-    origin: function (origin, callback) {
-        const allowedOrigins = [
-            "http://localhost:5174", // for local dev
-            "https://quickshop-server-mwtv.onrender.com" // ✅ your live frontend URL
-        ];
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
-    credentials: true
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: ["Content-Type", "Authorization"]
 };
+
 
 app.use(cors(corsOptions));
 app.use(express.json());
