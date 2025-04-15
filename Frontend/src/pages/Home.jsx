@@ -23,7 +23,7 @@ const Home = ({ searchQuery }) => {
       try {
         const [productsRes, categoriesRes] = await Promise.all([
           getProducts(),
-          fetch("http://localhost:6001/api/categories").then((res) =>
+          fetch("https://quickshop-server-mwtv.onrender.com/api/categories").then((res) =>
             res.json()
           ),
         ]);
