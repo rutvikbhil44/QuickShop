@@ -9,24 +9,13 @@ const categoryRoutes = require("./routes/categoryRoutes"); // ✅ Import categor
 const app = express();
 connectDB();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "https://quickshop-frontendd.onrender.com/"
-];
-
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
+  origin: ["https://quickshop-frontendd.onrender.com", "http://localhost:5173"], // Add the live frontend URL
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 };
+
 
 
 app.use(cors(corsOptions));
