@@ -26,7 +26,7 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:6001/api/products/${id}`);
+        const res = await fetch(`https://quickshop-server-mwtv.onrender.com/api/products/${id}`);
         const data = await res.json();
         setProduct(data);
 
