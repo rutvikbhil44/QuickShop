@@ -19,7 +19,7 @@ const AddProduct = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await fetch("http://localhost:6001/api/categories");
+                const res = await fetch("https://quickshop-server-mwtv.onrender.com");
                 const data = await res.json();
                 setCategories(data);
             } catch (error) {
@@ -36,7 +36,7 @@ const AddProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch("http://localhost:6001/api/products", {
+            const res = await fetch("https://quickshop-server-mwtv.onrender.com", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
