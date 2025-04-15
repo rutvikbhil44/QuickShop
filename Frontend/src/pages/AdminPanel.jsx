@@ -22,7 +22,7 @@ const AdminPanel = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:6001/api/products");
+      const res = await fetch("https://quickshop-server-mwtv.onrender.com/api/products");
       const data = await res.json();
       setProducts(data);
     } catch (error) {
