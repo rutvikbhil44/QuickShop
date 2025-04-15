@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:6001/api" });
+const API = axios.create({ baseURL: "https://quickshop-server-mwtv.onrender.com" });
 
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
