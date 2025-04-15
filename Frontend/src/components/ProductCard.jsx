@@ -104,14 +104,14 @@ const ProductCard = ({ product, onDelete }) => {
                 className="p-2 text-gray-600 hover:text-blue-600 transition-colors"
                 title="Edit"
               >
-                <FiEdit className="h-4 w-4" />
+                {/* <FiEdit className="h-4 w-4" /> */}
               </button>
               <button
                 onClick={handleDeleteClick}
                 className="p-2 text-gray-600 hover:text-red-600 transition-colors"
                 title="Delete"
               >
-                <FiTrash2 className="h-4 w-4" />
+                {/* <FiTrash2 className="h-4 w-4" /> */}
               </button>
             </div>
           )}
