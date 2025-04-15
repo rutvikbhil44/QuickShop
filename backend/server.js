@@ -10,7 +10,17 @@ const app = express();
 connectDB();
 
 const corsOptions = {
-    origin: "http://localhost:5173", // Allow requests from your frontend
+    origin: function (origin, callback) {
+        const allowedOrigins = [
+            "http://localhost:5174", // for local dev
+            "https://quickshop-server-mwtv.onrender.com" // ✅ your live frontend URL
+        ];
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: "Content-Type,Authorization",
     credentials: true
