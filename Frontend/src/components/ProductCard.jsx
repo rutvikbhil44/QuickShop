@@ -1,11 +1,13 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { CartContext } from "../context/CartContext"; // Add this import
 import { FiShoppingCart, FiTrash2, FiEdit } from "react-icons/fi";
 import { toast } from "react-toastify";
 
 const ProductCard = ({ product, onDelete }) => {
   const { user } = useContext(AuthContext);
+  const { addToCart } = useContext(CartContext); 
   const navigate = useNavigate();
 
   const handleNavigate = (e) => {
@@ -15,7 +17,12 @@ const ProductCard = ({ product, onDelete }) => {
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
-    toast.success(`${product.name} added to cart`);
+    addToCart({ ...product, quantity: 1 }); // Add product to cart with quantity 1
+    toast.success(`${product.name} added to cart`, {
+      position: "bottom-right",
+      autoClose: 2000,
+      hideProgressBar: true,
+    });
   };
 
   const handleEdit = (e) => {
@@ -106,22 +113,14 @@ const ProductCard = ({ product, onDelete }) => {
                 className="p-1.5 text-gray-600 hover:text-blue-600 transition-colors"
                 title="Edit"
               >
-<<<<<<< HEAD
                 {/* <FiEdit className="h-4 w-4" /> */}
-=======
-                <FiEdit className="h-3 w-3" />
->>>>>>> 8d8d836fd0b24db168198cc57a0cd49bacb3272b
               </button>
               <button
                 onClick={handleDeleteClick}
-                className="p-1.5 text-gray-600 hover:text-red-600 transition-colors"
+                className="p-1.5 text-gray-600 hover:text-red-600 transition-colors"  
                 title="Delete"
               >
-<<<<<<< HEAD
                 {/* <FiTrash2 className="h-4 w-4" /> */}
-=======
-                <FiTrash2 className="h-3 w-3" />
->>>>>>> 8d8d836fd0b24db168198cc57a0cd49bacb3272b
               </button>
             </div>
           )}
