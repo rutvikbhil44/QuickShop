@@ -10,6 +10,7 @@ import Cart from "./pages/Cart";
 import AdminPanel from "./pages/AdminPanel";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrderConfirmation from "./pages/OrderConfirmation";
+import EditProduct from "./pages/EditProduct";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,6 +28,7 @@ function App() {
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
+        <Route path="/edit-product/:id" element={<EditProduct />} />
       </Routes>
     </>
   );

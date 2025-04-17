@@ -43,7 +43,7 @@ const AdminPanel = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:6001/api/products/${productId}`,
+        `https://quickshop-server-mwtv.onrender.com/api/products/${productId}`,
         {
           method: "DELETE",
           headers: {
