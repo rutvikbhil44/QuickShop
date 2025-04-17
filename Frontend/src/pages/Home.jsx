@@ -41,7 +41,7 @@ const Home = ({ searchQuery }) => {
     fetchData();
   }, []);
 
-  const handleCategoryClick = (category) => {
+  const   handleCategoryClick = (category) => {
     setSelectedCategory(category);
     setShowMobileFilters(false);
   };
