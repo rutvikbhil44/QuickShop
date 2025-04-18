@@ -63,11 +63,14 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     addToCart({ ...product, quantity });
-    toast.success(`${product.name} added to cart`, {
-      position: "bottom-right",
-      autoClose: 2000,
-      hideProgressBar: true,
-    });
+    toast.success(
+      `${quantity} ${quantity > 1 ? 'items' : 'item'} of ${product.name} added to cart`, 
+      {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+      }
+    );
   };
 
   const rating = 4.7;
@@ -147,7 +150,6 @@ const ProductDetail = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
-      {/* Breadcrumbs - Made single line with ellipsis for mobile */}
       <nav
         className="flex mb-4 sm:mb-6 overflow-hidden"
         aria-label="Breadcrumb"
@@ -190,7 +192,6 @@ const ProductDetail = () => {
       </nav>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-12">
-        {/* Image Gallery - Adjusted for mobile */}
         <div>
           <div className="bg-gray-50 rounded-lg sm:rounded-xl overflow-hidden mb-3 sm:mb-4">
             <img
@@ -222,7 +223,6 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* Product Info - Adjusted spacing and font sizes for mobile */}
         <div>
           <div className="flex justify-between items-start">
             <div>
@@ -297,7 +297,7 @@ const ProductDetail = () => {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
               <div className="flex items-center border rounded-md w-full sm:w-auto">
                 <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
                   className="px-3 py-2 text-gray-600 hover:bg-gray-100"
                 >
                   -
@@ -306,7 +306,7 @@ const ProductDetail = () => {
                   {quantity}
                 </span>
                 <button
-                  onClick={() => setQuantity(quantity + 1)}
+                  onClick={() => setQuantity(prev => prev + 1)}
                   className="px-3 py-2 text-gray-600 hover:bg-gray-100"
                 >
                   +
@@ -321,8 +321,9 @@ const ProductDetail = () => {
               </button>
             </div>
             <button
-            onClick={handleBuyNow}
-             className="mt-3 sm:mt-4 w-full px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 rounded-md text-sm sm:text-base font-medium hover:bg-gray-50 transition-colors">
+              onClick={handleBuyNow}
+              className="mt-3 sm:mt-4 w-full px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 rounded-md text-sm sm:text-base font-medium hover:bg-gray-50 transition-colors"
+            >
               Buy Now
             </button>
           </div>
@@ -367,7 +368,6 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {/* Reviews Section - Adjusted for mobile */}
       <div className="mt-8 sm:mt-16">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
           Customer Reviews

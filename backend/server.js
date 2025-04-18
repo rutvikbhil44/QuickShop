@@ -10,7 +10,7 @@ const app = express();
 connectDB();
 
 const corsOptions = {
-  origin: ["https://quickshop-frontendd.onrender.com", "http://localhost:5173"], // Add the live frontend URL
+  origin: ["https://quickshop-frontendd.onrender.com", "http://localhost:5174", "http://localhost:5173"], // Add the live frontend URL
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true

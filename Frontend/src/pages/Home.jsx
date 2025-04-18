@@ -17,21 +17,74 @@ const Home = ({ searchQuery }) => {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [featuredProducts, setFeaturedProducts] = useState([]);
 
+  // Enhanced categories with proper images
+  const enhancedCategories = [
+    {
+      name: "Electronics",
+      image:
+        "https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8ZWxlY3Ryb25pY3N8ZW58MHx8MHx8fDA%3D",
+      description: "Latest gadgets and devices",
+    },
+    {
+      name: "Jewelery",
+      image:
+        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+      description: "Beautiful jewelry pieces",
+    },
+    {
+      name: "Men's Clothing",
+      image:
+        "https://images.unsplash.com/photo-1520367445093-50dc08a59d9d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+      description: "Stylish men's fashion",
+    },
+    {
+      name: "Women's Clothing",
+      image:
+        "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+      description: "Trendy women's outfits",
+    },
+    {
+      name: "Home Appliances", 
+            image: "https://images.unsplash.com/photo-1621529355377-b1685d2a7d77?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aG9tZSUyMGFhcGxpYW5jZXN8ZW58MHx8MHx8fDA%3D",
+            description: "Smart home tech", 
+    },
+    {
+      name: "Books",
+      image:
+        "https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+      description: "Bestselling books",
+    },
+    {
+      name: "Sports",
+      image:
+        "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+      description: "Sports equipment",
+    },
+    {
+      name: "Beauty",
+      image:
+        "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+      description: "Beauty and cosmetics",
+    },
+  ];
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
         const [productsRes, categoriesRes] = await Promise.all([
           getProducts(),
-          fetch("https://quickshop-server-mwtv.onrender.com/api/categories").then((res) =>
-            res.json()
-          ),
+          fetch(
+            "https://quickshop-server-mwtv.onrender.com/api/categories"
+          ).then((res) => res.json()),
         ]);
 
         const allProducts = productsRes.data || [];
         setProducts(allProducts);
         setCategories(categoriesRes || []);
-        setFeaturedProducts(allProducts.sort(() => 0.5 - Math.random()).slice(0, 4));
+        setFeaturedProducts(
+          allProducts.sort(() => 0.5 - Math.random()).slice(0, 4)
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -41,9 +94,14 @@ const Home = ({ searchQuery }) => {
     fetchData();
   }, []);
 
-  const   handleCategoryClick = (category) => {
+  const handleCategoryClick = (category) => {
     setSelectedCategory(category);
     setShowMobileFilters(false);
+    // Smooth scroll to products section
+    const productsSection = document.getElementById("shop-now");
+    if (productsSection) {
+      productsSection.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const filteredProducts = products.filter((product) => {
@@ -57,7 +115,7 @@ const Home = ({ searchQuery }) => {
 
   return (
     <div className="bg-gray-50">
-      {/* Hero Section - Made more compact for mobile */}
+      {/* Hero Section */}
       <div className="relative bg-gray-900 text-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
@@ -94,106 +152,90 @@ const Home = ({ searchQuery }) => {
         </div>
       </div>
 
-      {/* Featured Categories - With static images */}
-<div className="bg-white py-8 sm:py-12">
-  <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h2 className="text-xl font-bold text-gray-900 mb-6 text-center sm:text-2xl">
-      Shop by Category
-    </h2>
-    <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
-      {/* Electronics */}
-      <div
-        className="group relative rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
-        onClick={() => handleCategoryClick("Electronics")}
+      {/* Shop by Category - No Scrollbar */}
+<div className="bg-white py-12">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {/* Section Header */}
+    <div className="text-center mb-10">
+      <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+        Shop by Category
+      </h2>
+      <p className="mt-3 max-w-2xl mx-auto text-lg text-gray-500">
+        Discover our curated collections
+      </p>
+    </div>
+
+    {/* Categories Carousel */}
+    <div className="relative">
+      {/* Left Navigation Button */}
+      <button
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white shadow-lg flex items-center justify-center text-gray-700 hover:bg-gray-50 transition-all duration-300"
+        onClick={() => {
+          const container = document.querySelector('.categories-container');
+          container.scrollBy({ left: -300, behavior: 'smooth' });
+        }}
       >
-        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
-          <img
-            src="https://images.unsplash.com/photo-1551269901-5c5e14c25df7?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
-            alt="Electronics"
-            className="w-full h-full object-cover group-hover:opacity-75"
-            loading="lazy"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3">
-          <h3 className="text-sm font-semibold text-white sm:text-base">Electronics</h3>
-          <p className="mt-0.5 text-gray-200 text-xs sm:text-sm">Shop now</p>
-        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      {/* Categories Container */}
+      <div className="categories-container flex overflow-x-hidden px-12">
+        {enhancedCategories.map((category, index) => (
+          <div
+            key={index}
+            className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-3 mb-6 transition-all duration-300"
+          >
+            <div 
+              className="relative rounded-xl overflow-hidden shadow-sm hover:shadow-md cursor-pointer h-full"
+              onClick={() => handleCategoryClick(category.name)}
+            >
+              <div className="aspect-[4/3] w-full overflow-hidden bg-gray-100">
+                <img
+                  src={category.image}
+                  alt={category.name}
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+              
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+              
+              <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <h3 className="text-xl font-bold mb-1">{category.name}</h3>
+                <p className="text-sm opacity-90">{category.description}</p>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Clothing */}
-      <div
-        className="group relative rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
-        onClick={() => handleCategoryClick("Clothing")}
+      {/* Right Navigation Button */}
+      <button
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-12 w-12 rounded-full bg-white shadow-lg flex items-center justify-center text-gray-700 hover:bg-gray-50 transition-all duration-300"
+        onClick={() => {
+          const container = document.querySelector('.categories-container');
+          container.scrollBy({ left: 300, behavior: 'smooth' });
+        }}
       >
-        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
-          <img
-            src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
-            alt="Clothing"
-            className="w-full h-full object-cover group-hover:opacity-75"
-            loading="lazy"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3">
-          <h3 className="text-sm font-semibold text-white sm:text-base">Clothing</h3>
-          <p className="mt-0.5 text-gray-200 text-xs sm:text-sm">Shop now</p>
-        </div>
-      </div>
-
-      {/* Home */}
-      <div
-        className="group relative rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
-        onClick={() => handleCategoryClick("Home")}
-      >
-        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
-          <img
-            src="https://images.unsplash.com/photo-1556911220-bff31c812dba?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
-            alt="Home"
-            className="w-full h-full object-cover group-hover:opacity-75"
-            loading="lazy"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3">
-          <h3 className="text-sm font-semibold text-white sm:text-base">Home</h3>
-          <p className="mt-0.5 text-gray-200 text-xs sm:text-sm">Shop now</p>
-        </div>
-      </div>
-
-      {/* Books */}
-      <div
-        className="group relative rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
-        onClick={() => handleCategoryClick("Books")}
-      >
-        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
-          <img
-            src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
-            alt="Books"
-            className="w-full h-full object-cover group-hover:opacity-75"
-            loading="lazy"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3">
-          <h3 className="text-sm font-semibold text-white sm:text-base">Books</h3>
-          <p className="mt-0.5 text-gray-200 text-xs sm:text-sm">Shop now</p>
-        </div>
-      </div>
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
     </div>
   </div>
 </div>
-
-      {/* Featured Products - 2 columns on mobile */}
+      {/* Featured Products */}
       <div className="bg-gray-50 py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-gray-900 sm:text-2xl">
               Featured Products
             </h2>
-            <button className="text-blue-600 hover:text-blue-800 text-sm font-medium sm:text-base">
+            {/* <button className="text-blue-600 hover:text-blue-800 text-sm font-medium sm:text-base">
               View All
-            </button>
+            </button> */}
           </div>
           <div className="grid gap-4 grid-cols-2 sm:gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {featuredProducts.map((product) => (
@@ -203,7 +245,7 @@ const Home = ({ searchQuery }) => {
         </div>
       </div>
 
-      {/* Promo Banner - More compact */}
+      {/* Promo Banner */}
       <div className="bg-yellow-50 py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-2 sm:text-2xl">
@@ -240,13 +282,18 @@ const Home = ({ searchQuery }) => {
               {/* Search Summary */}
               {searchQuery && (
                 <p className="text-gray-600 text-xs sm:text-sm md:text-base">
-                  Results for: <span className="font-semibold">"{searchQuery}"</span>
+                  Results for:{" "}
+                  <span className="font-semibold">"{searchQuery}"</span>
                 </p>
               )}
             </div>
 
             {/* Category Filters - Scrollable on mobile */}
-            <div className={`${showMobileFilters ? "block" : "hidden"} md:block overflow-x-auto pb-2`}>
+            <div
+              className={`${
+                showMobileFilters ? "block" : "hidden"
+              } md:block overflow-x-auto pb-2`}
+            >
               <div className="flex flex-nowrap gap-2 md:flex-wrap md:gap-3 w-max md:w-full">
                 <button
                   onClick={() => handleCategoryClick("")}
@@ -275,7 +322,7 @@ const Home = ({ searchQuery }) => {
             </div>
           </section>
 
-          {/* Product Grid Section - 2 columns on mobile */}
+          {/* Product Grid Section */}
           <section>
             {isLoading ? (
               <div className="grid gap-4 grid-cols-2 sm:gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -298,7 +345,11 @@ const Home = ({ searchQuery }) => {
               <>
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-2">
                   <p className="text-xs text-gray-600 sm:text-sm">
-                    Showing <span className="font-semibold">{filteredProducts.length}</span> products
+                    Showing{" "}
+                    <span className="font-semibold">
+                      {filteredProducts.length}
+                    </span>{" "}
+                    products
                     {selectedCategory && ` in ${selectedCategory}`}
                   </p>
                   <div className="flex items-center text-xs text-gray-500 sm:text-sm">
@@ -350,7 +401,7 @@ const Home = ({ searchQuery }) => {
         </div>
       </div>
 
-      {/* Testimonials - Single column on mobile */}
+      {/* Testimonials */}
       <div className="bg-gray-100 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold text-center text-gray-900 mb-8 sm:text-2xl">
@@ -397,10 +448,12 @@ const Home = ({ searchQuery }) => {
         </div>
       </div>
 
-      {/* Newsletter - More compact */}
+      {/* Newsletter */}
       <div className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-xl font-bold mb-3 sm:text-2xl">Join Our Newsletter</h2>
+          <h2 className="text-xl font-bold mb-3 sm:text-2xl">
+            Join Our Newsletter
+          </h2>
           <p className="text-gray-300 mb-6 max-w-2xl mx-auto text-sm sm:text-base">
             Subscribe for exclusive offers and new product announcements.
           </p>

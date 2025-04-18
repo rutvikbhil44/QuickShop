@@ -238,7 +238,7 @@ const Navbar = ({ setSearchQuery }) => {
                     <span className="sr-only">Open user menu</span>
                     <img
                       className="h-8 w-8 rounded-full object-cover"
-                      src={user.photo || "/profile-placeholder.png"}
+                      src={user.photo || "/profile.jpeg"}
                       alt="User profile"
                     />
                   </button>
@@ -253,7 +253,7 @@ const Navbar = ({ setSearchQuery }) => {
                         <div className="flex-shrink-0">
                           <img
                             className="h-10 w-10 rounded-full border-2 border-yellow-500 object-cover"
-                            src={user.photo || "/profile-placeholder.png"}
+                            src={user.photo || "/profile.jpeg"}
                             alt="User profile"
                           />
                         </div>
@@ -264,28 +264,41 @@ const Navbar = ({ setSearchQuery }) => {
                                 type="text"
                                 value={newName}
                                 onChange={(e) => setNewName(e.target.value)}
-                                className="flex-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
+                                className="flex-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm text-black"
                                 autoFocus
                               />
                               <button
                                 onClick={handleNameSave}
-                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                                disabled={!newName.trim()}
+                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50"
                               >
                                 Save
                               </button>
+                              <button
+                                onClick={() => {
+                                  setEditingName(false);
+                                  setNewName(user.name);
+                                }} // cancel the edit and reset name
+                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                              >
+                                Cancel
+                              </button>
                             </div>
                           ) : (
-                            <div className="flex justify-between items-center">
-                              <p className="text-sm font-medium text-gray-900">
+                            <div className="flex justify-between items-center ">
+                              <p className="text-md font-medium text-gray-900">
                                 {user.name}
                               </p>
                               <button
-                                onClick={() => setEditingName(true)}
+                                onClick={() => {
+                                  setEditingName(true);
+                                  setNewName(user.name);
+                                }} // set newName to user.name when editing starts
                                 className="text-gray-400 hover:text-gray-500"
                                 aria-label="Edit name"
                               >
                                 <svg
-                                  className="h-4 w-4"
+                                  className="h-5 w-5"
                                   fill="none"
                                   stroke="currentColor"
                                   viewBox="0 0 24 24"
@@ -300,6 +313,7 @@ const Navbar = ({ setSearchQuery }) => {
                               </button>
                             </div>
                           )}
+
                           <p className="text-xs text-gray-500 mt-1">
                             {user.email}
                           </p>
