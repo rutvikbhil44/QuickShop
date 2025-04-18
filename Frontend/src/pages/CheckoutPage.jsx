@@ -10,6 +10,7 @@ import {
 } from "react-icons/fi";
 import { toast } from "react-toastify";
 
+
 const CheckoutPage = () => {
   const { cart, clearCart } = useContext(CartContext);
   const [formData, setFormData] = useState({
@@ -39,17 +40,36 @@ const CheckoutPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (cart.length === 0) {
       toast.error("Your cart is empty!");
       return;
     }
-
+  
     setIsSubmitting(true);
-
+  
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
-
+  
+    // Prepare order data
+    const orderData = {
+      customer: {
+        name: formData.name,
+        email: formData.email,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        zipCode: formData.zipCode,
+      },
+      orderId: (Math.random() * 1000000).toFixed(0),
+      paymentMethod: formData.paymentMethod,
+      total: grandTotal,
+      cart,
+    };
+  
+    // Save order data in localStorage
+    localStorage.setItem("lastOrder", JSON.stringify(orderData));
+  
     toast.success(
       <div>
         <div className="flex items-center">
@@ -57,15 +77,16 @@ const CheckoutPage = () => {
           <span>Order placed successfully!</span>
         </div>
         <p className="text-sm mt-1">
-          Your order #{(Math.random() * 1000000).toFixed(0)} has been confirmed.
+          Your order #{orderData.orderId} has been confirmed.
         </p>
       </div>,
       { autoClose: 3000 }
     );
-
+  
     clearCart();
     navigate("/order-confirmation");
   };
+  
 
   if (cart.length === 0) {
     return (
