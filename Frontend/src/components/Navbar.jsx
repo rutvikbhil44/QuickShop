@@ -2,7 +2,7 @@ import { useContext, useState, useRef, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { CartContext } from "../context/CartContext";
 import { Link, useNavigate } from "react-router-dom";
-import { FiMenu, FiX, FiShoppingCart, FiUser, FiSearch } from "react-icons/fi";
+import { FiMenu, FiX, FiShoppingCart, FiUser } from "react-icons/fi";
 import React from "react";
 
 const Navbar = () => {
@@ -12,11 +12,9 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState(user?.name || "");
-  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
-  const searchRef = useRef(null);
 
   // Close dropdowns and mobile menu when clicking outside
   useEffect(() => {
@@ -81,15 +79,6 @@ const Navbar = () => {
     }
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-      setSearchQuery("");
-      setMobileMenuOpen(false);
-    }
-  };
-
   const handleLinkClick = () => {
     setDropdownOpen(false);
     setMobileMenuOpen(false);
@@ -126,13 +115,6 @@ const Navbar = () => {
               >
                 Home
               </Link>
-              {/* <Link
-                to="/products"
-                className="text-gray-200 hover:text-white px-2 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-                onClick={handleLinkClick}
-              >
-                Products
-              </Link> */}
               <Link
                 to="/deals"
                 className="text-gray-200 hover:text-white px-2 py-2 rounded-md text-sm font-medium transition-colors duration-200"
@@ -157,35 +139,8 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Search Bar - Desktop */}
-          <div className="hidden md:flex flex-1 max-w-xs lg:max-w-md mx-4">
-            <form onSubmit={handleSearch} className="w-full" ref={searchRef}>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FiSearch className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 sm:text-sm text-gray-900 transition-all duration-200"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </form>
-          </div>
-
           {/* Right Section */}
           <div className="flex items-center space-x-3 sm:space-x-4">
-            {/* Search Button - Mobile */}
-            <button
-              className="md:hidden p-2 rounded-md text-gray-200 hover:text-white hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-amber-300 transition-all duration-200"
-              onClick={() => navigate("/search")}
-              aria-label="Search"
-            >
-              <FiSearch className="h-5 w-5" />
-            </button>
-
             {/* Cart */}
             <Link
               to="/cart"
@@ -202,7 +157,7 @@ const Navbar = () => {
 
             {/* Auth / Profile */}
             {!user ? (
-              <div className="hidden sm:flex items-center space-x-2">
+              <div className="hidden md:flex items-center space-x-2">
                 <Link
                   to="/login"
                   className="px-3 py-1.5 rounded-md text-sm font-medium text-gray-200 hover:text-white hover:bg-blue-900 transition-all duration-200"
@@ -467,22 +422,6 @@ const Navbar = () => {
             style={{ animation: "slideIn 0.3s ease-in-out forwards" }}
           >
             <div className="px-4 py-4 bg-blue-900 shadow-lg">
-              {/* Search Bar - Mobile */}
-              <form onSubmit={handleSearch} className="mb-4">
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FiSearch className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search products..."
-                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 sm:text-sm text-gray-900"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-              </form>
-
               {/* Mobile Navigation Links */}
               <Link
                 to="/"
@@ -491,13 +430,6 @@ const Navbar = () => {
               >
                 Home
               </Link>
-              {/* <Link
-                to="/products"
-                className="block px-3 py-2 rounded-md text-sm font-medium text-gray-200 hover:text-white hover:bg-blue-800 transition-colors duration-200"
-                onClick={handleLinkClick}
-              >
-                Products
-              </Link> */}
               <Link
                 to="/deals"
                 className="block px-3 py-2 rounded-md text-sm font-medium text-gray-200 hover:text-white hover:bg-blue-800 transition-colors duration-200"
@@ -520,7 +452,7 @@ const Navbar = () => {
                 Contact
               </Link>
 
-              {/* Mobile Auth Links
+              {/* Mobile Auth Links */}
               {!user ? (
                 <>
                   <Link
@@ -572,7 +504,7 @@ const Navbar = () => {
                     </button>
                   </div>
                 </>
-              )} */}
+              )}
             </div>
           </div>
         )}
