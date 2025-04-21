@@ -12,8 +12,8 @@ import {
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import React from "react";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -22,11 +22,21 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-
   const navigate = useNavigate();
 
   const handleBuyNow = () => {
+    // Add the product with the selected quantity to the cart
     addToCart({ ...product, quantity });
+    // Show toast notification
+    toast.success(
+      `${quantity} ${quantity > 1 ? "items" : "item"} of ${product.name} added to cart`,
+      {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+      }
+    );
+    // Navigate to checkout
     navigate("/checkout");
   };
 
@@ -38,8 +48,6 @@ const ProductDetail = () => {
           `https://quickshop-server-mwtv.onrender.com/api/products/${id}`
         );
         const data = await res.json();
-        setProduct(data);
-
         if (data) {
           setProduct({
             ...data,
@@ -64,7 +72,7 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     addToCart({ ...product, quantity });
     toast.success(
-      `${quantity} ${quantity > 1 ? 'items' : 'item'} of ${product.name} added to cart`, 
+      `${quantity} ${quantity > 1 ? "items" : "item"} of ${product.name} added to cart`,
       {
         position: "bottom-right",
         autoClose: 2000,
@@ -297,7 +305,7 @@ const ProductDetail = () => {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
               <div className="flex items-center border rounded-md w-full sm:w-auto">
                 <button
-                  onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                  onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
                   className="px-3 py-2 text-gray-600 hover:bg-gray-100"
                 >
                   -
@@ -306,7 +314,7 @@ const ProductDetail = () => {
                   {quantity}
                 </span>
                 <button
-                  onClick={() => setQuantity(prev => prev + 1)}
+                  onClick={() => setQuantity((prev) => prev + 1)}
                   className="px-3 py-2 text-gray-600 hover:bg-gray-100"
                 >
                   +

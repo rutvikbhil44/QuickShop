@@ -11,6 +11,11 @@ import AdminPanel from "./pages/AdminPanel";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import EditProduct from "./pages/EditProduct";
+import OrdersPage from "./pages/OrdersPage";
+import WishlistPage from "./pages/WishlistPage";
+import Deals from "./pages/Deals";
+import Contact from "./pages/Contact";
+import About from "./pages/About";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,6 +34,12 @@ function App() {
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
         <Route path="/edit-product/:id" element={<EditProduct />} />
+        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/wishlist" element={<WishlistPage />} />
+        <Route path="/deals" element={<Deals />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
+
       </Routes>
     </>
   );

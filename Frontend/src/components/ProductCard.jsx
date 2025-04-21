@@ -1,14 +1,23 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { CartContext } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
-import { CartContext } from "../context/CartContext"; // Add this import
-import { FiShoppingCart, FiTrash2, FiEdit } from "react-icons/fi";
+import { FiShoppingCart, FiHeart } from "react-icons/fi";
 import { toast } from "react-toastify";
 
-const ProductCard = ({ product, onDelete }) => {
+const ProductCard = ({ product }) => {
   const { user } = useContext(AuthContext);
-  const { addToCart } = useContext(CartContext); 
+  const { addToCart } = useContext(CartContext);
   const navigate = useNavigate();
+  const [isInWishlist, setIsInWishlist] = useState(false);
+
+  // Load wishlist from localStorage on mount
+  useEffect(() => {
+    if (user) {
+      const wishlist = JSON.parse(localStorage.getItem(`wishlist_${user._id}`)) || [];
+      setIsInWishlist(wishlist.some((item) => item._id === product._id));
+    }
+  }, [user, product._id]);
 
   const handleNavigate = (e) => {
     if (e.target.closest("button")) return;
@@ -17,7 +26,7 @@ const ProductCard = ({ product, onDelete }) => {
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
-    addToCart({ ...product, quantity: 1 }); // Add product to cart with quantity 1
+    addToCart({ ...product, quantity: 1 });
     toast.success(`${product.name} added to cart`, {
       position: "bottom-right",
       autoClose: 2000,
@@ -25,17 +34,40 @@ const ProductCard = ({ product, onDelete }) => {
     });
   };
 
-  const handleEdit = (e) => {
+  const handleWishlistToggle = (e) => {
     e.stopPropagation();
-    navigate(`/edit-product/${product._id}`);
-  };
+    if (!user) {
+      toast.error("Please sign in to add to wishlist", {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+      });
+      navigate("/login");
+      return;
+    }
 
-  const handleDeleteClick = (e) => {
-    e.stopPropagation();
-    onDelete(product._id);
-  };
+    const wishlist = JSON.parse(localStorage.getItem(`wishlist_${user._id}`)) || [];
+    let updatedWishlist;
 
-  
+    if (isInWishlist) {
+      updatedWishlist = wishlist.filter((item) => item._id !== product._id);
+      toast.success(`${product.name} removed from wishlist`, {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+      });
+    } else {
+      updatedWishlist = [...wishlist, product];
+      toast.success(`${product.name} added to wishlist`, {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+      });
+    }
+
+    localStorage.setItem(`wishlist_${user._id}`, JSON.stringify(updatedWishlist));
+    setIsInWishlist(!isInWishlist);
+  };
 
   return (
     <div
@@ -106,24 +138,25 @@ const ProductCard = ({ product, onDelete }) => {
             <span>Add to Cart</span>
           </button>
 
-          {user?.role === "admin" && (
-            <div className="flex space-x-1">
+          <div className="flex space-x-1">
+            {user && (
               <button
-                onClick={handleEdit}
-                className="p-1.5 text-gray-600 hover:text-blue-600 transition-colors"
-                title="Edit"
+                onClick={handleWishlistToggle}
+                className={`p-1.5 transition-colors ${
+                  isInWishlist
+                    ? "text-red-600 hover:text-red-700"
+                    : "text-gray-600 hover:text-red-600"
+                }`}
+                title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
               >
-                {/* <FiEdit className="h-4 w-4" /> */}
+                <FiHeart
+                  className="h-4 w-4"
+                  fill={isInWishlist ? "currentColor" : "none"}
+                  stroke="currentColor"
+                />
               </button>
-              <button
-                onClick={handleDeleteClick}
-                className="p-1.5 text-gray-600 hover:text-red-600 transition-colors"  
-                title="Delete"
-              >
-                {/* <FiTrash2 className="h-4 w-4" /> */}
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
