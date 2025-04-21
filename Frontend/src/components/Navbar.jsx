@@ -126,13 +126,13 @@ const Navbar = () => {
               >
                 Home
               </Link>
-              <Link
+              {/* <Link
                 to="/products"
                 className="text-gray-200 hover:text-white px-2 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                 onClick={handleLinkClick}
               >
                 Products
-              </Link>
+              </Link> */}
               <Link
                 to="/deals"
                 className="text-gray-200 hover:text-white px-2 py-2 rounded-md text-sm font-medium transition-colors duration-200"
@@ -491,13 +491,13 @@ const Navbar = () => {
               >
                 Home
               </Link>
-              <Link
+              {/* <Link
                 to="/products"
                 className="block px-3 py-2 rounded-md text-sm font-medium text-gray-200 hover:text-white hover:bg-blue-800 transition-colors duration-200"
                 onClick={handleLinkClick}
               >
                 Products
-              </Link>
+              </Link> */}
               <Link
                 to="/deals"
                 className="block px-3 py-2 rounded-md text-sm font-medium text-gray-200 hover:text-white hover:bg-blue-800 transition-colors duration-200"
