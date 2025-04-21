@@ -1,22 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { FiCheckCircle, FiShoppingBag, FiTruck, FiCreditCard, FiHome, FiMail, FiPhone } from "react-icons/fi";
+import { useNavigate, useLocation } from "react-router-dom";
+import {
+  FiCheckCircle,
+  FiShoppingBag,
+  FiTruck,
+  FiCreditCard,
+  FiHome,
+  FiMail,
+  FiPhone,
+} from "react-icons/fi";
 
 const OrderConfirmation = () => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    const savedOrder = localStorage.getItem("lastOrder");
-    if (savedOrder) {
-      setOrder(JSON.parse(savedOrder));
-     
+    console.log("State order:", location.state?.order);
+    const orderFromState = location.state?.order;
+
+    if (orderFromState) {
+      setOrder(orderFromState);
     } else {
-      navigate("/"); // Redirect if no order is found
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+      console.log("Orders from localStorage:", orders);
+      const latestOrder = orders.length > 0 ? orders[orders.length - 1] : null;
+      console.log("Latest order:", latestOrder);
+      if (latestOrder) {
+        setOrder(latestOrder);
+      } else {
+        navigate("/");
+      }
     }
-    setLoading(false); // Stop loading once the effect is done
-  }, [navigate]);
+    setLoading(false);
+  }, [navigate, location.state]);
 
   if (loading) {
     return (
@@ -27,7 +45,7 @@ const OrderConfirmation = () => {
   }
 
   if (!order) {
-    return null; // In case order still isn't found, return null instead of rendering anything
+    return null;
   }
 
   return (
@@ -42,8 +60,12 @@ const OrderConfirmation = () => {
             Order Confirmed
           </h1>
           <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-            Thank you for your purchase, <span className="font-semibold text-gray-900">{order.customer.name}</span>!
-            We've received your order and will send you a confirmation email shortly.
+            Thank you for your purchase,{" "}
+            <span className="font-semibold text-gray-900">
+              {order.customer.name}
+            </span>
+            ! We've received your order and will send you a confirmation email
+            shortly.
           </p>
         </div>
 
@@ -62,8 +84,12 @@ const OrderConfirmation = () => {
                   <FiTruck className="text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500">Order Number</h3>
-                  <p className="text-lg font-semibold text-gray-900">{order.orderId}</p>
+                  <h3 className="text-sm font-medium text-gray-500">
+                    Order Number
+                  </h3>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {order.orderId}
+                  </p>
                 </div>
               </div>
 
@@ -72,8 +98,12 @@ const OrderConfirmation = () => {
                   <FiCreditCard className="text-purple-600" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500">Payment Method</h3>
-                  <p className="text-lg font-semibold text-gray-900 capitalize">{order.paymentMethod}</p>
+                  <h3 className="text-sm font-medium text-gray-500">
+                    Payment Method
+                  </h3>
+                  <p className="text-lg font-semibold text-gray-900 capitalize">
+                    {order.paymentMethod}
+                  </p>
                 </div>
               </div>
             </div>
@@ -84,8 +114,12 @@ const OrderConfirmation = () => {
                   <FiCheckCircle className="text-green-600" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500">Order Total</h3>
-                  <p className="text-lg font-semibold text-gray-900">${order.total.toFixed(2)}</p>
+                  <h3 className="text-sm font-medium text-gray-500">
+                    Order Total
+                  </h3>
+                  <p className="text-lg font-semibold text-gray-900">
+                    ${order.total.toFixed(2)}
+                  </p>
                 </div>
               </div>
 
@@ -94,9 +128,12 @@ const OrderConfirmation = () => {
                   <FiHome className="text-yellow-600" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500">Shipping Address</h3>
+                  <h3 className="text-sm font-medium text-gray-500">
+                    Shipping Address
+                  </h3>
                   <p className="text-lg font-semibold text-gray-900">
-                    {order.customer.address}, {order.customer.city}, {order.customer.state} {order.customer.zipCode}
+                    {order.customer.address}, {order.customer.city},{" "}
+                    {order.customer.state} {order.customer.zipCode}
                   </p>
                 </div>
               </div>
@@ -110,14 +147,18 @@ const OrderConfirmation = () => {
           <div className="lg:col-span-1">
             <div className="bg-white shadow rounded-lg overflow-hidden">
               <div className="px-6 py-5 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-lg font-medium text-gray-900">Customer Details</h2>
+                <h2 className="text-lg font-medium text-gray-900">
+                  Customer Details
+                </h2>
               </div>
               <div className="px-6 py-5">
                 <div className="flex items-center mb-4">
                   <FiMail className="text-gray-400 mr-3" />
                   <div>
                     <p className="text-sm text-gray-500">Email</p>
-                    <p className="font-medium text-gray-900">{order.customer.email}</p>
+                    <p className="font-medium text-gray-900">
+                      {order.customer.email}
+                    </p>
                   </div>
                 </div>
                 {order.customer.phone && (
@@ -125,7 +166,9 @@ const OrderConfirmation = () => {
                     <FiPhone className="text-gray-400 mr-3" />
                     <div>
                       <p className="text-sm text-gray-500">Phone</p>
-                      <p className="font-medium text-gray-900">{order.customer.phone}</p>
+                      <p className="font-medium text-gray-900">
+                        {order.customer.phone}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -137,7 +180,9 @@ const OrderConfirmation = () => {
           <div className="lg:col-span-2">
             <div className="bg-white shadow rounded-lg overflow-hidden">
               <div className="px-6 py-5 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-lg font-medium text-gray-900">Order Items ({order.cart.length})</h2>
+                <h2 className="text-lg font-medium text-gray-900">
+                  Order Items ({order.cart.length})
+                </h2>
               </div>
               <div className="divide-y divide-gray-200">
                 {order.cart.map((item) => (
@@ -145,16 +190,24 @@ const OrderConfirmation = () => {
                     <div className="flex items-center">
                       <img
                         src={item.image}
-                        alt={item.title}
+                        alt={item.name}
                         className="w-16 h-16 rounded-md object-cover"
                       />
                       <div className="ml-4 flex-1">
-                        <h3 className="text-lg font-medium text-gray-900">{item.title}</h3>
-                        <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                        <h3 className="text-lg font-medium text-gray-900">
+                          {item.name}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Quantity: {item.quantity}
+                        </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-lg font-semibold text-gray-900">${(item.price * item.quantity).toFixed(2)}</p>
-                        <p className="text-sm text-gray-500">${item.price.toFixed(2)} each</p>
+                        <p className="text-lg font-semibold text-gray-900">
+                          ${(item.price * item.quantity).toFixed(2)}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          ${item.price.toFixed(2)} each
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -162,8 +215,12 @@ const OrderConfirmation = () => {
               </div>
               <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
                 <div className="flex justify-between items-center">
-                  <span className="text-lg font-medium text-gray-900">Total</span>
-                  <span className="text-xl font-bold text-gray-900">${order.total.toFixed(2)}</span>
+                  <span className="text-lg font-medium text-gray-900">
+                    Total
+                  </span>
+                  <span className="text-xl font-bold text-gray-900">
+                    ${order.total.toFixed(2)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -182,9 +239,12 @@ const OrderConfirmation = () => {
                   <FiCheckCircle className="h-full w-full" />
                 </div>
                 <div>
-                  <p className="text-base font-medium text-gray-900">Order confirmation sent</p>
+                  <p className="text-base font-medium text-gray-900">
+                    Order confirmation sent
+                  </p>
                   <p className="text-sm text-gray-500 mt-1">
-                    We've sent a confirmation email to {order.customer.email} with your order details.
+                    We've sent a confirmation email to {order.customer.email} with
+                    your order details.
                   </p>
                 </div>
               </li>
@@ -193,9 +253,12 @@ const OrderConfirmation = () => {
                   <FiTruck className="h-full w-full" />
                 </div>
                 <div>
-                  <p className="text-base font-medium text-gray-900">Shipping updates</p>
+                  <p className="text-base font-medium text-gray-900">
+                    Shipping updates
+                  </p>
                   <p className="text-sm text-gray-500 mt-1">
-                    You'll receive another email when your order ships with tracking information.
+                    You'll receive another email when your order ships with
+                    tracking information.
                   </p>
                 </div>
               </li>
@@ -212,7 +275,13 @@ const OrderConfirmation = () => {
             Continue Shopping
           </button>
           <p className="mt-4 text-sm text-gray-500">
-            Need help? <a href="/contact" className="font-medium text-green-600 hover:text-green-500">Contact our support team</a>
+            Need help?{" "}
+            <a
+              href="/contact"
+              className="font-medium text-green-600 hover:text-green-500"
+            >
+              Contact our support team
+            </a>
           </p>
         </div>
       </div>

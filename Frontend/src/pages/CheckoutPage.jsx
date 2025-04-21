@@ -47,50 +47,62 @@ const CheckoutPage = () => {
 
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    // Prepare order data
-    const orderData = {
-      customer: {
-        name: formData.name,
-        email: formData.email,
-        address: formData.address,
-        city: formData.city,
-        state: formData.state,
-        zipCode: formData.zipCode,
-      },
-      orderId: (Math.random() * 1000000).toFixed(0),
-      paymentMethod: formData.paymentMethod,
-      total: grandTotal,
-      cart,
-      date: new Date().toISOString(), // Add timestamp for order date
-    };
+      // Prepare order data
+      const orderData = {
+        customer: {
+          name: formData.name,
+          email: formData.email,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          zipCode: formData.zipCode,
+        },
+        orderId: (Math.random() * 1000000).toFixed(0),
+        paymentMethod: formData.paymentMethod,
+        total: grandTotal,
+        cart,
+        date: new Date().toISOString(),
+      };
 
-    // Retrieve existing orders from localStorage
-    const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
+      // Save to orders array
+      const existingOrders = JSON.parse(localStorage.getItem("orders")) || [];
+      const updatedOrders = [...existingOrders, orderData];
+      console.log("Saving to localStorage:", updatedOrders);
+      try {
+        localStorage.setItem("orders", JSON.stringify(updatedOrders));
+      } catch (error) {
+        console.error("Failed to save order to localStorage:", error);
+        toast.error("Error saving order. Please try again.");
+        return;
+      }
 
-    // Append new order to the array
-    const updatedOrders = [...existingOrders, orderData];
+      toast.success(
+        <div>
+          <div className="flex items-center">
+            <FiCheckCircle className="h-5 w-5 text-green-500 mr-2" />
+            <span>Order placed successfully!</span>
+          </div>
+          <p className="text-sm mt-1">
+            Your order #{orderData.orderId} has been confirmed.
+          </p>
+        </div>,
+        { autoClose: 3000 }
+      );
 
-    // Save updated orders array to localStorage
-    localStorage.setItem("orders", JSON.stringify(updatedOrders));
-
-    toast.success(
-      <div>
-        <div className="flex items-center">
-          <FiCheckCircle className="h-5 w-5 text-green-500 mr-2" />
-          <span>Order placed successfully!</span>
-        </div>
-        <p className="text-sm mt-1">
-          Your order #{orderData.orderId} has been confirmed.
-        </p>
-      </div>,
-      { autoClose: 3000 }
-    );
-
-    clearCart();
-    navigate("/order-confirmation");
+      console.log("Calling clearCart...");
+      clearCart();
+      console.log("Navigating to /order-confirmation...");
+      navigate("/order-confirmation", { state: { order: orderData } });
+    } catch (error) {
+      console.error("Order submission failed:", error);
+      toast.error("Failed to place order. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (cart.length === 0) {
